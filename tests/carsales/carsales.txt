@@ -1,0 +1,20 @@
+How many customers are there in this database?
+What is the most popular brand of car among customers?
+How many dealers carry the most popular brand of car among customers?
+What is the average household income of customers?
+What is the most expensive car model?
+How many cars have been recalled?
+What are the different brands of cars sold?
+What is the average income of a customer who owns a car with a premium sound system?
+What brand has produced the most car models?
+What dealer has made the most money selling cars?
+What Car Option is most popular among customers?
+What is the oldest car model?
+How many cars does the average customer have?
+How many cars are produced at each plant location?
+How old is the average customer that buys a ferrari?
+How many customers bought the Orange Car model on new year’s day, and what brand is the Orange Car?
+How many cars have a “Bose Audio” system?
+What manufacturing plant has produced the most cars?
+What manufacturing plant has had the most cars recalled?
+How many customers have had their cars recalled?

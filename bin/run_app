@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# run_app
+#
+# Run flask app on the specified port
+#
+# Andrew DeOrio <awdeorio@umich.edu>
+
+# Stop on errors, print commands
+set -Eeuo pipefail
+set -x
+
+#Run flask app
+python3 app.py

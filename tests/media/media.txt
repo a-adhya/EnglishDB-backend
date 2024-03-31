@@ -1,0 +1,20 @@
+How many customers are represented in this database?
+What was the name of the longest song in this database?
+Give me the names of the top 10 customers who spent the most on tracks in this database.
+What are the top 10 most popular tracks?
+What album was the most popular among customers?
+Who is the employee who serviced the most number of customer transactions?
+Who is the boss of the employee who serviced the highest number of customer transactions?
+What is the most popular genre of music bought by customers?
+What is the average price of a track bought by the customer who spent the most money?
+What are the total dollar sales for each album?
+For each genre, name the state in the US that the genre was most popular in.
+Name the most popular genre by state in the US present in the database
+Which employees have sold the most in dollars? Give me the top 10
+Which artist has the most tracks in playlists?
+Which artist has the most sales?
+What genres are most popular in each country?
+What is the last track that each customer purchased?
+What is each customer’s favorite genre of music?
+Which employee’s boss has the most employees reporting to him?
+What is the most data-heavy track in this database?

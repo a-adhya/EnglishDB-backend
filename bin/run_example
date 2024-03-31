@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# run_example
+#
+# Run example test with the following
+#
+# Andrew DeOrio <awdeorio@umich.edu>
+
+# Stop on errors, print commands
+set -Eeuo pipefail
+set -x
+
+#All tests
+python3 tests/api2.py > example_results.txt

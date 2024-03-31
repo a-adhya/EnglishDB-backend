@@ -1,0 +1,18 @@
+What are the top 5 most ordered products?
+Which customers have placed the most orders?
+What is the total revenue per category?
+How many products does each supplier provide?
+Which employees have served the most orders?
+What is the average order quantity for each product?
+Which countries are the most products supplied from?
+What are the sales figures per country of customer?
+Which category has the highest average product price?
+How many orders were placed each year?
+Which customers have not placed any orders?
+What is the average price of products for each category?
+Which supplier has the largest number of products in the database?
+What is the total number of units ordered for each product?
+Which shipper has delivered the most orders?
+What is the total sales amount for each employee?
+Which city has the most customers?
+Find the total number of orders placed by each customer.
