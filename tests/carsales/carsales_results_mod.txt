@@ -1,0 +1,203 @@
+*************************TESTS****************************
+
+
+Question: What is the average household income of customers?
+
+Response: SELECT AVG(household_income) 
+FROM Customers 
+
+Question: What are the different brands of cars sold?
+
+Response: SELECT DISTINCT brand_name
+FROM Brands
+ORDER BY brand_name
+LIMIT 30 
+
+Question: How many customers are there in this database?
+
+Response: SELECT COUNT(*) 
+FROM Customers 
+
+Question: How many cars have been recalled?
+
+Response: SELECT COUNT(*) 
+FROM Car_Parts 
+WHERE part_recall = 1 
+
+Question: What brand has produced the most car models?
+
+Response: SELECT b.brand_name, COUNT(m.model_id) AS model_count
+FROM Brands b
+JOIN Models m ON b.brand_id = m.brand_id
+GROUP BY b.brand_name
+ORDER BY model_count DESC
+LIMIT 1 
+
+Database Query Result: [(6,)]
+Database Query Result: [(287333.3333333333,)]
+Database Query Result: [(0,)]
+Database Query Result: [('Boujiee',), ('Cover Squirrel',), ('Ferrari',), ('Freshest',), ('Supreme',), ('Yellow',)]
+Database Query Result: [('Ferrari', 4)]
+Question: What is the most expensive car model?
+
+Response: SELECT Models.model_name, MAX(Car_Options.option_set_price + Models.model_base_price) AS total_price
+FROM Models
+JOIN Car_Options ON Models.model_id = Car_Options.model_id
+GROUP BY Models.model_id
+ORDER BY total_price DESC
+LIMIT 1 
+
+Database Query Result: [('F12 Berlinetta', 135000)]
+Question: How many cars does the average customer have?
+
+Response: SELECT AVG(car_count) AS average_cars_per_customer
+FROM (
+    SELECT COUNT(vin) AS car_count
+    FROM Customer_Ownership
+    GROUP BY customer_id
+) 
+
+Database Query Result: [(1.0,)]
+Question: How many cars have a “Bose Audio” system?
+
+Response: SELECT COUNT(DISTINCT Car_Vins.vin) AS TotalCarsWithBoseAudio
+FROM Car_Vins
+JOIN Car_Options ON Car_Vins.option_set_id = Car_Options.option_set_id
+JOIN Car_Parts ON Car_Options.premium_sound_id = Car_Parts.part_id
+WHERE Car_Parts.part_name = "Bose Audio" 
+
+Database Query Result: [(3,)]
+Question: What is the average income of a customer who owns a car with a premium sound system?
+
+Response: SELECT AVG(Customers.household_income) AS average_income
+FROM Customers
+JOIN Customer_Ownership ON Customers.customer_id = Customer_Ownership.customer_id
+JOIN Car_Vins ON Customer_Ownership.vin = Car_Vins.vin
+JOIN Car_Options ON Car_Vins.option_set_id = Car_Options.option_set_id
+WHERE Car_Options.premium_sound_id IS NOT NULL 
+
+Database Query Result: [(126666.66666666667,)]
+Question: What is the oldest car model?
+
+Response: SELECT Models.model_name, MIN(Car_Vins.manufactured_date) AS oldest_date
+FROM Car_Vins
+JOIN Models ON Car_Vins.model_id = Models.model_id
+GROUP BY Models.model_name
+ORDER BY oldest_date
+LIMIT 1 
+
+Database Query Result: [('The Brunette', '2013-03-04')]
+Question: What dealer has made the most money selling cars?
+
+Response: SELECT d.dealer_id, d.dealer_name, SUM(co.purchase_price) AS total_sales
+FROM Dealers d
+JOIN Customer_Ownership co ON d.dealer_id = co.dealer_id
+GROUP BY d.dealer_id, d.dealer_name
+ORDER BY total_sales DESC
+LIMIT 1 
+
+Database Query Result: [(4, 'Priority Z', 121300)]
+Question: What Car Option is most popular among customers?
+
+Response: SELECT Car_Options.option_set_id, COUNT(Customer_Ownership.vin) AS ownership_count
+FROM Car_Options
+JOIN Car_Vins ON Car_Options.option_set_id = Car_Vins.option_set_id
+JOIN Customer_Ownership ON Car_Vins.vin = Customer_Ownership.vin
+GROUP BY Car_Options.option_set_id
+ORDER BY ownership_count DESC
+LIMIT 1 
+
+Database Query Result: [(17, 1)]
+Question: How many cars are produced at each plant location?
+
+Response: SELECT Manufacture_Plant.plant_location, COUNT(Car_Vins.vin) AS cars_produced
+FROM Car_Vins
+JOIN Manufacture_Plant ON Car_Vins.manufactured_plant_id = Manufacture_Plant.manufacture_plant_id
+GROUP BY Manufacture_Plant.plant_location
+LIMIT 30 
+
+Database Query Result: [('Asia', 2), ('Australia', 3)]
+Question: How many dealers carry the most popular brand of car among customers?
+
+Response: SELECT COUNT(DISTINCT dealer_id) 
+FROM Dealer_Brand 
+WHERE brand_id = (
+    SELECT brand_id 
+    FROM Models 
+    JOIN Car_Vins ON Models.model_id = Car_Vins.model_id 
+    JOIN Customer_Ownership ON Car_Vins.vin = Customer_Ownership.vin 
+    GROUP BY Models.brand_id 
+    ORDER BY COUNT(*) DESC 
+    LIMIT 1
+) 
+
+Database Query Result: [(3,)]
+Question: What manufacturing plant has produced the most cars?
+
+Response: SELECT Manufacture_Plant.plant_name, COUNT(Car_Vins.vin) AS Total_Produced
+FROM Manufacture_Plant
+JOIN Car_Vins ON Manufacture_Plant.manufacture_plant_id = Car_Vins.manufactured_plant_id
+GROUP BY Manufacture_Plant.plant_name
+ORDER BY Total_Produced DESC
+LIMIT 1 
+
+Database Query Result: [('South Plant', 3)]
+Question: How many customers bought the Orange Car model on new year’s day, and what brand is the Orange Car?
+
+Response: SELECT COUNT(DISTINCT co.customer_id) AS number_of_customers, b.brand_name
+FROM Customers co
+JOIN Customer_Ownership coo ON co.customer_id = coo.customer_id
+JOIN Car_Vins cv ON coo.vin = cv.vin
+JOIN Car_Options copt ON cv.option_set_id = copt.option_set_id
+JOIN Models m ON copt.model_id = m.model_id
+JOIN Brands b ON m.brand_id = b.brand_id
+WHERE copt.color = "Orange"
+AND coo.purchase_date = "2023-01-01"
+LIMIT 30 
+
+Database Query Result: [(0, None)]
+Question: What is the most popular brand of car among customers?
+
+Response: SELECT Brands.brand_name, COUNT(Customer_Ownership.vin) AS total_cars
+FROM Customer_Ownership
+JOIN Car_Vins ON Customer_Ownership.vin = Car_Vins.vin
+JOIN Car_Options ON Car_Vins.option_set_id = Car_Options.option_set_id
+JOIN Models ON Car_Options.model_id = Models.model_id
+JOIN Brands ON Models.brand_id = Brands.brand_id
+GROUP BY Brands.brand_id
+ORDER BY total_cars DESC
+LIMIT 1 
+
+Database Query Result: [('Boujiee', 1)]
+Question: What manufacturing plant has had the most cars recalled?
+
+Response: SELECT Manufacture_Plant.plant_name, COUNT(*) AS recall_count
+FROM Car_Parts
+JOIN Manufacture_Plant ON Car_Parts.manufacture_plant_id = Manufacture_Plant.manufacture_plant_id
+WHERE Car_Parts.part_recall = 1
+GROUP BY Manufacture_Plant.plant_name
+ORDER BY recall_count DESC
+LIMIT 1 
+
+Question: How old is the average customer that buys a ferrari?
+
+Response: SELECT AVG(strftime('%Y-%m-%d', 'now') - strftime('%Y-%m-%d', birthdate)) AS average_age
+FROM Customers
+JOIN Customer_Ownership ON Customers.customer_id = Customer_Ownership.customer_id
+JOIN Car_Vins ON Customer_Ownership.vin = Car_Vins.vin
+JOIN Models ON Car_Vins.model_id = Models.model_id
+JOIN Brands ON Models.brand_id = Brands.brand_id
+WHERE Brands.brand_name = 'Ferrari' 
+
+Database Query Result: []
+Database Query Result: [(44.0,)]
+Question: How many customers have had their cars recalled?
+Response: SELECT COUNT(DISTINCT Customers.customer_id) 
+FROM Customers
+JOIN Customer_Ownership ON Customer_Ownership.customer_id = Customers.customer_id
+JOIN Car_Vins ON Car_Vins.vin = Customer_Ownership.vin
+JOIN Car_Options ON Car_Options.option_set_id = Car_Vins.option_set_id
+JOIN Car_Parts ON Car_Options.engine_id = Car_Parts.part_id OR Car_Options.transmission_id = Car_Parts.part_id OR Car_Options.chassis_id = Car_Parts.part_id OR Car_Options.premium_sound_id = Car_Parts.part_id
+WHERE Car_Parts.part_recall = 1 
+
+Database Query Result: [(0,)]

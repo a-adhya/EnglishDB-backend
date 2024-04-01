@@ -11,6 +11,6 @@ set -Eeuo pipefail
 set -x
 
 #All tests
-python3 tests/api.py tests/carsales/carsales_schema.sql tests/carsales/carsales.txt var/carsales.sqlite3 > tests/carsales/carsales_results.txt
-python3 tests/api.py tests/media/media_schema.sql tests/media/media.txt var/chinook.sqlite3 > tests/media/media_results.txt
-python3 tests/api.py tests/office/office_schema.sql tests/office/office.txt var/office.sqlite3 > tests/office/office_results.txt
+python3 tests/api.py tests/carsales/carsales_schema.sql tests/carsales/carsales.txt var/carsales.sqlite3 > tests/carsales/carsales_results_mod.txt
+python3 tests/api.py tests/media/media_schema.sql tests/media/media.txt var/chinook.sqlite3 > tests/media/media_results_mod.txt
+python3 tests/api.py tests/office/office_schema.sql tests/office/office.txt var/office.sqlite3 > tests/office/office_results_mod.txt

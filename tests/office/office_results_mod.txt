@@ -1,0 +1,183 @@
+*************************TESTS****************************
+
+
+Question: Which customers have not placed any orders?
+
+Response: SELECT Customers.CustomerName
+FROM Customers
+LEFT JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+WHERE Orders.OrderID IS NULL
+LIMIT 30 
+
+Question: Which city has the most customers?
+
+Response: SELECT City, COUNT(CustomerID) AS NumberOfCustomers
+FROM Customers
+GROUP BY City
+ORDER BY NumberOfCustomers DESC
+LIMIT 1 
+
+Question: How many products does each supplier provide?
+
+Response: SELECT SupplierID, COUNT(ProductID) AS NumberOfProducts
+FROM Products
+GROUP BY SupplierID
+ORDER BY NumberOfProducts DESC
+LIMIT 30 
+
+Question: Find the total number of orders placed by each customer.
+Response: SELECT CustomerID, 
+COUNT(OrderID) AS TotalOrders 
+FROM Orders 
+GROUP BY CustomerID 
+ORDER BY TotalOrders DESC 
+LIMIT 30 
+
+Question: Which supplier has the largest number of products in the database?
+
+Response: SELECT Suppliers.SupplierName, COUNT(Products.ProductID) AS NumberOfProducts
+FROM Suppliers
+JOIN Products ON Suppliers.SupplierID = Products.SupplierID
+GROUP BY Suppliers.SupplierID
+ORDER BY NumberOfProducts DESC
+LIMIT 1 
+
+Question: What is the average price of products for each category?
+
+Response: SELECT Categories.CategoryName, AVG(Products.Price) AS AveragePrice
+FROM Products
+JOIN Categories ON Products.CategoryID = Categories.CategoryID
+GROUP BY Categories.CategoryName
+LIMIT 30 
+
+Database Query Result: [('Beverages', 37.979166666666664), ('Condiments', 23.0625), ('Confections', 25.16), ('Dairy Products', 28.73), ('Grains/Cereals', 20.25), ('Meat/Poultry', 54.00666666666667), ('Produce', 32.37), ('Seafood', 20.6825)]
+Database Query Result: [(12, 5), (7, 5), (8, 4), (2, 4), (24, 3), (23, 3), (20, 3), (17, 3), (16, 3), (15, 3), (14, 3), (11, 3), (6, 3), (4, 3), (3, 3), (1, 3), (29, 2), (28, 2), (26, 2), (25, 2), (22, 2), (21, 2), (19, 2), (18, 2), (9, 2), (5, 2), (27, 1), (13, 1), (10, 1)]
+Database Query Result: [('Alfreds Futterkiste',), ('Blauer See Delikatessen',), ('Cactus Comidas para llevar',), ('FISSA Fabrica Inter. Salchichas S.A.',), ('France restauration',), ('Great Lakes Food Market',), ("La corne d''abondance",), ('Laughing Bacchus Wine Cellars',), ('Lazy K Kountry Store',), ("Let''s Stop N Shop",), ('Maison Dewey',), ('North/South',), ('Paris spécialités',), ('Rancho grande',), ('Spécialités du monde',), ('The Cracker Box',), ("Trail''s Head Gourmet Provisioners",)]
+Database Query Result: [('Plutzer Lebensmittelgroßmärkte AG', 5)]
+Database Query Result: [('London', 6)]
+Database Query Result: [(20, 10), (87, 7), (65, 7), (63, 7), (75, 6), (37, 6), (51, 5), (46, 5), (41, 5), (86, 4), (80, 4), (71, 4), (61, 4), (55, 4), (25, 4), (24, 4), (10, 4), (7, 4), (72, 3), (69, 3), (66, 3), (60, 3), (59, 3), (49, 3), (44, 3), (38, 3), (36, 3), (21, 3), (9, 3), (5, 3)]
+Question: How many orders were placed each year?
+
+Response: SELECT strftime('%Y', OrderDate) AS Year, 
+COUNT(OrderID) AS TotalOrders
+FROM Orders
+GROUP BY Year
+ORDER BY Year
+LIMIT 30 
+
+Database Query Result: [('1996', 152), ('1997', 44)]
+Question: Which customers have placed the most orders?
+
+Response: SELECT Customers.CustomerName, COUNT(Orders.OrderID) AS NumberOfOrders
+FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+GROUP BY Customers.CustomerID
+ORDER BY NumberOfOrders DESC
+LIMIT 30 
+
+Database Query Result: [('Ernst Handel', 10), ('Wartian Herkku', 7), ('Rattlesnake Canyon Grocery', 7), ('QUICK-Stop', 7), ('Split Rail Beer & Ale', 6), ('Hungry Owl All-Night Grocers', 6), ('Mère Paillarde', 5), ('LILA-Supermercado', 5), ("La maison d''Asie", 5), ('Die Wandernde Kuh', 4), ('Tortuga Restaurante', 4), ('Save-a-lot Markets', 4), ('Que Delícia', 4), ('Old World Delicatessen', 4), ('Frankenversand', 4), ('Folk och fä HB', 4), ('Bottom-Dollar Marketse', 4), ('Blondel père et fils', 4), ('Seven Seas Imports', 3), ('Romero y tomillo', 3), ('Reggiani Caseifici', 3), ('Princesa Isabel Vinhoss', 3), ('Piccolo und mehr', 3), ('Magazzini Alimentari Riuniti', 3), ('Lehmanns Marktstand', 3), ('Island Trading', 3), ('Hungry Coyote Import Store', 3), ('Familia Arquibaldo', 3), ("Bon app''", 3), ('Berglunds snabbköp', 3)]
+Question: Which employees have served the most orders?
+
+Response: SELECT Employees.EmployeeID, Employees.FirstName, Employees.LastName, COUNT(Orders.OrderID) AS NumberOfOrders
+FROM Employees
+JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID
+GROUP BY Employees.EmployeeID
+ORDER BY NumberOfOrders DESC
+LIMIT 30 
+
+Database Query Result: [(4, 'Margaret', 'Peacock', 40), (3, 'Janet', 'Leverling', 31), (1, 'Nancy', 'Davolio', 29), (8, 'Laura', 'Callahan', 27), (2, 'Andrew', 'Fuller', 20), (6, 'Michael', 'Suyama', 18), (7, 'Robert', 'King', 14), (5, 'Steven', 'Buchanan', 11), (9, 'Anne', 'Dodsworth', 6)]
+Question: What are the sales figures per country of customer?
+
+Response: SELECT Customers.Country, SUM(OrderDetails.Quantity * Products.Price) AS SalesFigures
+FROM Customers
+JOIN Orders ON Customers.CustomerID = Orders.CustomerID
+JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+JOIN Products ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Customers.Country
+ORDER BY SalesFigures DESC
+LIMIT 30 
+
+Database Query Result: [('USA', 69611.75), ('Austria', 51671.96), ('Germany', 47241.82), ('Brazil', 40215.25), ('Canada', 31326.35), ('France', 29549.15), ('Denmark', 17870.85), ('UK', 16695.79), ('Ireland', 15391.02), ('Venezuela', 13556.28), ('Sweden', 9720.8), ('Switzerland', 8124.75), ('Belgium', 8051.3), ('Finland', 6438.5), ('Mexico', 5861.56), ('Italy', 4328.56), ('Spain', 4302.19), ('Portugal', 4170.0), ('Norway', 1323.6), ('Poland', 573.75), ('Argentina', 399.0)]
+Question: What are the top 5 most ordered products?
+
+Response: SELECT Products.ProductName, SUM(OrderDetails.Quantity) AS TotalQuantity
+FROM OrderDetails
+JOIN Products ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductID
+ORDER BY TotalQuantity DESC
+LIMIT 5 
+
+Question: What is the total number of units ordered for each product?
+
+Response: SELECT Products.ProductID, Products.ProductName, SUM(OrderDetails.Quantity) AS TotalUnitsOrdered
+FROM OrderDetails
+JOIN Products ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Products.ProductID
+ORDER BY TotalUnitsOrdered DESC
+LIMIT 30 
+
+Database Query Result: [('Gorgonzola Telino', 458), ('Camembert Pierrot', 430), ('Steeleye Stout', 369), ('Raclette Courdavault', 346), ('Chang', 341)]
+Database Query Result: [(31, 'Gorgonzola Telino', 458), (60, 'Camembert Pierrot', 430), (35, 'Steeleye Stout', 369), (59, 'Raclette Courdavault', 346), (2, 'Chang', 341), (16, 'Pavlova', 338), (71, 'Fløtemysost', 336), (17, 'Alice Mutton', 331), (62, 'Tarte au sucre', 325), (33, 'Geitost', 316), (54, 'Tourtière', 280), (72, 'Mozzarella di Giovanni', 270), (56, 'Gnocchi di nonna Alice', 269), (39, 'Chartreuse verte', 266), (40, 'Boston Crab Meat', 256), (53, 'Perth Pasties', 251), (38, 'Côte de Blaye', 239), (55, 'Pâté chinois', 238), (26, 'Gumbär Gummibärchen', 232), (63, 'Vegie-spread', 209), (68, 'Scottish Longbreads', 199), (76, 'Lakkalikööri', 198), (36, 'Inlagd Sill', 198), (28, 'Rössle Sauerkraut', 189), (74, 'Longlife Tofu', 186), (69, 'Gudbrandsdalsost', 184), (11, 'Queso Cabrales', 182), (19, 'Teatime Chocolate Biscuits', 181), (49, 'Maxilaku', 180), (44, 'Gula Malacca', 178)]
+Question: Which category has the highest average product price?
+
+Response: SELECT Categories.CategoryName, AVG(Products.Price) AS AveragePrice
+FROM Products
+JOIN Categories ON Products.CategoryID = Categories.CategoryID
+GROUP BY Categories.CategoryName
+ORDER BY AveragePrice DESC
+LIMIT 1 
+
+Database Query Result: [('Meat/Poultry', 54.00666666666667)]
+Question: Which shipper has delivered the most orders?
+
+Response: SELECT ShipperName, COUNT(Orders.OrderID) AS NumberOfOrders
+FROM Shippers
+JOIN Orders ON Shippers.ShipperID = Orders.ShipperID
+GROUP BY Shippers.ShipperID
+ORDER BY NumberOfOrders DESC
+LIMIT 1 
+
+Database Query Result: [('United Package', 74)]
+Question: What is the total revenue per category?
+
+Response: SELECT Categories.CategoryName, 
+SUM(Products.Price * OrderDetails.Quantity) AS TotalRevenue
+FROM Categories
+JOIN Products ON Categories.CategoryID = Products.CategoryID
+JOIN OrderDetails ON Products.ProductID = OrderDetails.ProductID
+GROUP BY Categories.CategoryName
+ORDER BY TotalRevenue DESC
+LIMIT 30 
+
+Database Query Result: [('Beverages', 99464.5), ('Dairy Products', 69921.0), ('Confections', 54909.159999999996), ('Meat/Poultry', 51676.520000000004), ('Condiments', 35071.6), ('Seafood', 29652.3), ('Produce', 23401.4), ('Grains/Cereals', 22327.75)]
+Question: What is the total sales amount for each employee?
+
+Response: SELECT Employees.EmployeeID, Employees.FirstName, Employees.LastName, SUM(Products.Price * OrderDetails.Quantity) AS TotalSales
+FROM Employees
+JOIN Orders ON Employees.EmployeeID = Orders.EmployeeID
+JOIN OrderDetails ON Orders.OrderID = OrderDetails.OrderID
+JOIN Products ON OrderDetails.ProductID = Products.ProductID
+GROUP BY Employees.EmployeeID
+ORDER BY TotalSales DESC
+LIMIT 30 
+
+Database Query Result: [(4, 'Margaret', 'Peacock', 105696.5), (1, 'Nancy', 'Davolio', 57690.39), (3, 'Janet', 'Leverling', 42838.35), (7, 'Robert', 'King', 39772.3), (8, 'Laura', 'Callahan', 39309.38), (2, 'Andrew', 'Fuller', 32503.16), (5, 'Steven', 'Buchanan', 27480.8), (6, 'Michael', 'Suyama', 25399.25), (9, 'Anne', 'Dodsworth', 15734.1)]
+Question: What is the average order quantity for each product?
+
+Response: SELECT ProductID, 
+AVG(Quantity) AS AverageQuantity
+FROM OrderDetails
+GROUP BY ProductID
+LIMIT 30 
+
+Database Query Result: [(1, 19.875), (2, 31.0), (3, 40.0), (4, 21.4), (5, 32.25), (6, 18.0), (7, 12.5), (8, 70.0), (9, 20.0), (10, 21.25), (11, 20.22222222222222), (12, 13.5), (13, 13.142857142857142), (14, 19.0), (15, 12.5), (16, 33.8), (17, 30.09090909090909), (18, 21.2), (19, 20.11111111111111), (20, 21.2), (21, 18.375), (22, 9.0), (23, 41.25), (24, 14.363636363636363), (25, 17.75), (26, 29.0), (27, 30.0), (28, 18.9), (29, 18.666666666666668), (30, 21.25)]
+Question: Which countries are the most products supplied from?
+
+Response: SELECT Country, COUNT(ProductID) AS ProductCount
+FROM Suppliers
+JOIN Products ON Suppliers.SupplierID = Products.SupplierID
+GROUP BY Country
+ORDER BY ProductCount DESC
+LIMIT 1 
+
+Database Query Result: [('USA', 12)]

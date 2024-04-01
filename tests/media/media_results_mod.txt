@@ -1,0 +1,251 @@
+*************************TESTS****************************
+
+
+Question: How many customers are represented in this database?
+
+Response: SELECT COUNT(*) AS NumberOfCustomers
+FROM customers 
+
+Question: What is the most data-heavy track in this database?
+
+Response: SELECT t.Name, t.Bytes
+FROM tracks t
+ORDER BY t.Bytes DESC
+LIMIT 1 
+
+Question: What are the top 10 most popular tracks?
+
+Response: Error: Sorry, I cannot help you with that request. Would you like to learn more about the database? 
+
+Database Query Result: Error: Sorry, I cannot help you with that request. Would you like to learn more about the database?
+Database Query Result: [('Through a Looking Glass', 1059546140)]
+Database Query Result: [(59,)]
+Question: What was the name of the longest song in this database?
+
+Response: SELECT t.Name AS SongName, MAX(t.Milliseconds) AS Length 
+FROM tracks t 
+ORDER BY t.Milliseconds DESC 
+LIMIT 1 
+
+Database Query Result: [('Occupation / Precipice', 5286953)]
+Question: Which employee’s boss has the most employees reporting to him?
+
+Response: SELECT e1.[LastName] AS BossLastName, e1.[FirstName] AS BossFirstName, COUNT(*) AS NumberOfDirectReports
+FROM employees e1
+JOIN employees e2 ON e1.[EmployeeId] = e2.[ReportsTo]
+GROUP BY e1.[EmployeeId]
+ORDER BY NumberOfDirectReports DESC
+LIMIT 1 
+
+Database Query Result: [('Edwards', 'Nancy', 3)]
+Question: What are the total dollar sales for each album?
+
+Response: SELECT albums.AlbumId, albums.Title, SUM(invoice_items.UnitPrice * invoice_items.Quantity) AS TotalSales
+FROM albums
+JOIN tracks ON albums.AlbumId = tracks.AlbumId
+JOIN invoice_items ON tracks.TrackId = invoice_items.TrackId
+GROUP BY albums.AlbumId
+ORDER BY TotalSales DESC
+LIMIT 30 
+
+Database Query Result: [(253, 'Battlestar Galactica (Classic), Season 1', 35.82), (251, 'The Office, Season 3', 31.84), (23, 'Minha Historia', 26.73), (228, 'Heroes, Season 1', 25.87), (231, 'Lost, Season 2', 25.87), (141, 'Greatest Hits', 25.74), (73, 'Unplugged', 24.75), (227, 'Battlestar Galactica, Season 3', 23.88), (229, 'Lost, Season 3', 21.89), (224, 'Acústico', 21.78), (230, 'Lost, Season 1', 19.9), (37, 'Greatest Kiss', 19.8), (21, 'Prenda Minha', 18.81), (55, 'Chronicle, Vol. 2', 18.81), (221, 'My Generation - The Very Best Of The Who', 18.81), (39, 'International Superhits', 17.82), (54, 'Chronicle, Vol. 1', 17.82), (167, 'Acústico MTV', 17.82), (51, "Up An' Atom", 16.83), (91, 'Use Your Illusion I', 16.83), (190, 'The Best Of R.E.M.: The IRS Years', 16.83), (237, 'Rattle And Hum', 16.83), (24, 'Afrociberdelia', 15.84), (255, 'Instant Karma: The Amnesty International Campaign to Save Darfur', 15.84), (34, 'Chill: Brazil (Disc 2)', 14.85), (52, 'Vinícius De Moraes - Sem Limite', 14.85), (72, 'The Cream Of Clapton', 14.85), (89, 'American Idiot', 14.85), (169, 'Arquivo Os Paralamas Do Sucesso', 14.85), (203, 'A-Sides', 14.85)]
+Question: What is the most popular genre of music bought by customers?
+
+Response: SELECT genres.Name, COUNT(invoice_items.InvoiceLineId) AS TotalSales
+FROM genres
+JOIN tracks ON genres.GenreId = tracks.GenreId
+JOIN invoice_items ON tracks.TrackId = invoice_items.TrackId
+GROUP BY genres.Name
+ORDER BY TotalSales DESC
+LIMIT 1 
+
+Database Query Result: [('Rock', 835)]
+Question: Who is the boss of the employee who serviced the highest number of customer transactions?
+
+Response: SELECT e2.FirstName || ' ' || e2.LastName AS BossFullName
+FROM employees e1
+JOIN employees e2 ON e1.ReportsTo = e2.EmployeeId
+JOIN customers c ON c.SupportRepId = e1.EmployeeId
+JOIN invoices i ON i.CustomerId = c.CustomerId
+GROUP BY e1.EmployeeId
+ORDER BY COUNT(i.InvoiceId) DESC
+LIMIT 1 
+
+Database Query Result: [('Nancy Edwards',)]
+Question: What album was the most popular among customers?
+
+Response: SELECT 
+    a.Title,
+    COUNT(ii.InvoiceLineId) AS TracksSold
+FROM 
+    albums a
+JOIN 
+    tracks t ON a.AlbumId = t.AlbumId
+JOIN 
+    invoice_items ii ON t.TrackId = ii.TrackId
+GROUP BY 
+    a.AlbumId
+ORDER BY 
+    TracksSold DESC
+LIMIT 1 
+
+Database Query Result: [('Minha Historia', 27)]
+Question: Which employees have sold the most in dollars? Give me the top 10
+
+Response: SELECT 
+    e.EmployeeId, 
+    e.FirstName, 
+    e.LastName,
+    SUM(i.Total) AS TotalSales
+FROM 
+    employees e
+JOIN 
+    customers c ON e.EmployeeId = c.SupportRepId
+JOIN 
+    invoices i ON c.CustomerId = i.CustomerId
+GROUP BY 
+    e.EmployeeId, 
+    e.FirstName, 
+    e.LastName
+ORDER BY 
+    TotalSales DESC
+LIMIT 10 
+
+Database Query Result: [(3, 'Jane', 'Peacock', 833.04), (4, 'Margaret', 'Park', 775.4), (5, 'Steve', 'Johnson', 720.16)]
+Question: Which artist has the most tracks in playlists?
+
+Response: SELECT a.ArtistId, ar.Name, COUNT(pt.TrackId) AS TracksInPlaylists
+FROM albums a
+JOIN artists ar ON a.ArtistId = ar.ArtistId
+JOIN tracks t ON t.AlbumId = a.AlbumId
+JOIN playlist_track pt ON pt.TrackId = t.TrackId
+GROUP BY a.ArtistId, ar.Name
+ORDER BY TracksInPlaylists DESC
+LIMIT 1 
+
+Database Query Result: [(90, 'Iron Maiden', 516)]
+Question: Which artist has the most sales?
+
+Response: SELECT a.Name, SUM(ii.Quantity) AS TotalSales
+FROM artists a
+JOIN albums al ON a.ArtistId = al.ArtistId
+JOIN tracks t ON al.AlbumId = t.AlbumId
+JOIN invoice_items ii ON t.TrackId = ii.TrackId
+GROUP BY a.ArtistId
+ORDER BY TotalSales DESC
+LIMIT 1 
+
+Question: Give me the names of the top 10 customers who spent the most on tracks in this database.
+
+Response: SELECT c.FirstName, c.LastName, SUM(ii.UnitPrice * ii.Quantity) AS TotalSpent
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+GROUP BY c.CustomerId
+ORDER BY TotalSpent DESC
+LIMIT 10 
+
+Database Query Result: [('Iron Maiden', 140)]
+Database Query Result: [('Helena', 'Holý', 49.62), ('Richard', 'Cunningham', 47.62), ('Luis', 'Rojas', 46.62), ('Ladislav', 'Kovács', 45.62), ('Hugh', "O'Reilly", 45.62), ('Frank', 'Ralston', 43.62), ('Julia', 'Barnett', 43.62), ('Fynn', 'Zimmermann', 43.62), ('Astrid', 'Gruber', 42.62), ('Victor', 'Stevens', 42.62)]
+Question: Who is the employee who serviced the most number of customer transactions?
+
+Response: SELECT e.EmployeeId, e.FirstName, e.LastName, COUNT(i.InvoiceId) AS NumberOfTransactions
+FROM employees e
+JOIN customers c ON e.EmployeeId = c.SupportRepId
+JOIN invoices i ON c.CustomerId = i.CustomerId
+GROUP BY e.EmployeeId, e.FirstName, e.LastName
+ORDER BY NumberOfTransactions DESC
+LIMIT 1 
+
+Database Query Result: [(3, 'Jane', 'Peacock', 146)]
+Question: What is the last track that each customer purchased?
+
+Response: SELECT c.CustomerId, c.FirstName, c.LastName, MAX(i.InvoiceDate) as LastPurchaseDate, t.Name AS LastTrackPurchased
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+GROUP BY c.CustomerId
+ORDER BY c.CustomerId
+LIMIT 30 
+
+Database Query Result: [(1, 'Luís', 'Gonçalves', '2013-08-07 00:00:00', 'Vamo Batê Lata'), (2, 'Leonie', 'Köhler', '2012-07-13 00:00:00', 'Boris The Spider'), (3, 'François', 'Tremblay', '2013-09-20 00:00:00', 'Waiting'), (4, 'Bjørn', 'Hansen', '2013-10-03 00:00:00', 'Saturnine'), (5, 'František', 'Wichterlová', '2013-05-06 00:00:00', 'Fear Of The Dark'), (6, 'Helena', 'Holý', '2013-11-13 00:00:00', 'Insensível'), (7, 'Astrid', 'Gruber', '2013-06-19 00:00:00', 'Abraham, Martin And John'), (8, 'Daan', 'Peeters', '2013-10-04 00:00:00', 'Rhinocerous'), (9, 'Kara', 'Nielsen', '2013-02-02 00:00:00', 'Caçador de Mim (Sá & Guarabyra)'), (10, 'Eduardo', 'Martins', '2013-08-12 00:00:00', 'Most High'), (11, 'Alexandre', 'Rocha', '2013-03-18 00:00:00', 'Is This Love (Live)'), (12, 'Roberto', 'Almeida', '2013-10-05 00:00:00', 'Eye'), (13, 'Fernanda', 'Ramos', '2012-11-01 00:00:00', 'Help Yourself'), (14, 'Mark', 'Philips', '2013-05-11 00:00:00', "Say It Loud, I'm Black And I'm Proud Pt.1"), (15, 'Jennifer', 'Peterson', '2012-12-15 00:00:00', 'Tarde Em Itapoã'), (16, 'Frank', 'Harris', '2013-07-04 00:00:00', 'Holier Than Thou'), (17, 'Jack', 'Smith', '2012-07-31 00:00:00', 'Formigueiro'), (18, 'Michelle', 'Brooks', '2013-10-08 00:00:00', 'Rasul'), (19, 'Tim', 'Goyer', '2012-09-13 00:00:00', 'Gay Witch Hunt'), (20, 'Dan', 'Miller', '2013-11-21 00:00:00', 'Peace On Earth'), (21, 'Kathy', 'Chase', '2013-12-04 00:00:00', 'When I Look At The World'), (22, 'Heather', 'Leacock', '2013-07-07 00:00:00', 'Hit The Lights'), (23, 'John', 'Gordon', '2013-12-04 00:00:00', 'The Three Sunrises'), (24, 'Frank', 'Ralston', '2013-08-20 00:00:00', 'Rappers Reais'), (25, 'Victor', 'Stevens', '2013-12-05 00:00:00', 'Bass Trap'), (26, 'Richard', 'Cunningham', '2013-04-05 00:00:00', 'American Idiot'), (27, 'Patrick', 'Gray', '2013-10-13 00:00:00', 'Black Moon Creeping'), (28, 'Julia', 'Barnett', '2013-05-19 00:00:00', "You've Got Another Thing Comin'"), (29, 'Robert', 'Brown', '2013-12-06 00:00:00', 'Trash, Trampoline And The Party Girl'), (30, 'Edward', 'Francis', '2013-01-02 00:00:00', 'Black Diamond')]
+Question: Name the most popular genre by state in the US present in the database
+
+Response: SELECT 
+    BillingState AS State, 
+    g.Name AS Genre, 
+    COUNT(ii.InvoiceLineId) AS TotalSales
+FROM invoices i
+JOIN customers c ON i.CustomerId = c.CustomerId
+JOIN invoice_items ii ON ii.InvoiceId = i.InvoiceId
+JOIN tracks t ON t.TrackId = ii.TrackId
+JOIN genres g ON g.GenreId = t.GenreId
+WHERE c.Country = 'USA'
+GROUP BY BillingState, Genre
+ORDER BY BillingState, TotalSales DESC
+LIMIT 1 OFFSET 0 
+
+Database Query Result: [('AZ', 'Rock', 16)]
+Question: What genres are most popular in each country?
+
+Response: SELECT i.BillingCountry AS Country, 
+       g.Name AS Genre, 
+       COUNT(ii.Quantity) AS TotalQuantity
+FROM invoices i
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+JOIN genres g ON t.GenreId = g.GenreId
+GROUP BY Country, g.GenreId
+ORDER BY Country, TotalQuantity DESC
+LIMIT 1 WITH TIES OVER (PARTITION BY Country) 
+
+Question: What is the average price of a track bought by the customer who spent the most money?
+
+Response: SELECT AVG(t.UnitPrice) AS AveragePrice
+FROM tracks t
+JOIN invoice_items ii ON t.TrackId = ii.TrackId
+JOIN invoices i ON ii.InvoiceId = i.InvoiceId
+WHERE i.CustomerId = (
+    SELECT i.CustomerId
+    FROM invoices i
+    GROUP BY i.CustomerId
+    ORDER BY SUM(i.Total) DESC
+    LIMIT 1
+)
+LIMIT 30 
+
+Database Query Result: [(1.3057894736842104,)]
+Question: For each genre, name the state in the US that the genre was most popular in.
+
+Response: SELECT 
+    g.Name AS Genre,
+    inv.BillingState AS State,
+    COUNT(ii.InvoiceLineId) AS Sales
+FROM genres g
+JOIN tracks t ON g.GenreId = t.GenreId
+JOIN invoice_items ii ON t.TrackId = ii.TrackId
+JOIN invoices inv ON ii.InvoiceId = inv.InvoiceId
+WHERE inv.BillingCountry = 'USA'
+GROUP BY g.GenreId, inv.BillingState
+ORDER BY g.Name, Sales DESC
+LIMIT 1 
+
+Database Query Result: [('Alternative', 'IL', 5)]
+Question: What is each customer’s favorite genre of music?
+
+Response: SELECT 
+    c.CustomerId, 
+    c.FirstName, 
+    c.LastName, 
+    g.Name AS FavoriteGenre
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+JOIN genres g ON t.GenreId = g.GenreId
+GROUP BY c.CustomerId, g.GenreId
+ORDER BY COUNT(ii.Quantity) DESC
+LIMIT 1 
+
+Database Query Result: [(10, 'Eduardo', 'Martins', 'Rock')]
